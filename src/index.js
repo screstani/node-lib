@@ -5,7 +5,7 @@ function getLinks(text) {
     const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm;
     const capturas = [...text.matchAll(regex)];
     const resultados = capturas.map(captura => ({[captura[1]]: captura[2]}))
-    return resultados;
+    return resultados.length !== 0 ? resultados : 'não há links no arquivo';
 }
 
 function errDealing(err) {
@@ -18,11 +18,9 @@ async function getFile(filePath) {
     try {
         const encoding = "utf-8";
         const text = await fs.promises.readFile(filePath, encoding);
-        console.log(getLinks(text));
+        return (getLinks(text));
     } catch(err) {
         errDealing(err);
-    } finally {
-        console.log(chalk.yellow('operação concluída'));
     }
 }
 
@@ -46,4 +44,4 @@ async function getFile(filePath) {
 //     })
 // }
 
-getFile('./arquivos/texto.md');
+export default getFile;
